@@ -2,9 +2,15 @@
 
 Embed Nous Research's Hermes Agent web UI directly in the UE5 editor. Access your local Hermes AI assistant without leaving Unreal Engine.
 
+## What's New in v3
+
+- **Asset Exporter** — Select assets in the Content Browser, then run `Hermes.ExportSelected` (or use the menu: *Tools → Hermes → Export Selected Assets…*) to copy them as `.uasset` files along with their hard package dependencies to any folder. Re-import the bundle into another Unreal project, or use it as a hand-off package.
+- This unblocks the "exporting Unreal Engine files" capability on the Fab listing.
+
 ## Features
 
 - **Embedded Web UI** — Full Hermes web interface runs inside an editor panel
+- **Asset Exporter** — Copy selected Content Browser assets and their hard package deps as `.uasset` files to a folder
 - **Auto-Detection** — Detects existing Hermes server on port 9119
 - **Auto-Launch** — Starts Hermes if not already running (requires `hermes` in PATH)
 - **Zoom Controls** — Ctrl+= and Ctrl+− to adjust zoom level (remembered across restarts)
@@ -37,6 +43,17 @@ Embed Nous Research's Hermes Agent web UI directly in the UE5 editor. Access you
 3. **Manage Windows** — The panel opens in a floating window (800x600) or brings existing window to front
 4. **Close** — Close the window normally; click Hermes button again to reopen
 
+### Exporting Assets
+
+1. Select one or more assets in the Content Browser
+2. Run the export via any of:
+   - Menu: *Tools → Hermes → Export Selected Assets…*
+   - Console command: `Hermes.ExportSelected`
+3. Pick a destination folder in the dialog
+4. The plugin writes each package (`.uasset` / `.umap`) plus sidecar files (`.uexp`, `.ubulk`, `.uptnl`) and resolves hard package dependencies via the Asset Registry
+
+The destination folder structure mirrors the project's `Content/` layout, so re-importing is just a folder copy into the receiving project's `Content/`.
+
 ## How It Works
 
 - The plugin spawns a local Hermes server via `hermes serve --port 9119` if one isn't already running
@@ -68,11 +85,13 @@ HermesIntegration/
 │   │   ├── HermesIntegration.h       (module interface)
 │   │   ├── HermesIntegrationModule.h (plugin module)
 │   │   ├── HermesManager.h           (Hermes process management)
-│   │   └── HermesPanel.h             (Slate UI widget)
+│   │   ├── HermesPanel.h             (Slate UI widget)
+│   │   └── HermesAssetExporter.h     (Content Browser → .uasset exporter)
 │   └── Private/
 │       ├── HermesIntegrationModule.cpp
 │       ├── HermesManager.cpp
-│       └── HermesPanel.cpp
+│       ├── HermesPanel.cpp
+│       └── HermesAssetExporter.cpp
 ├── HermesIntegration.uplugin
 └── Binaries/ (generated after first compile)
 ```
