@@ -2,15 +2,17 @@
 
 Embed Nous Research's Hermes Agent web UI directly in the UE5 editor. Access your local Hermes AI assistant without leaving Unreal Engine.
 
-## What's New in v4 (plugin v1.0.1)
+## What's New in v5 (plugin v1.0.1)
 
 - **Blank-panel fix** — the plugin now launches the Hermes **dashboard** (the browser UI) instead of `hermes serve` (the headless backend, which serves no web page). This was the cause of the empty panel.
 - **Finds Hermes automatically** — resolves the Hermes executable via PATH *or* the standard local install, so auto-launch works even when `hermes` isn't on your PATH.
 - **Reliable first load** — waits for the dashboard's one-time web-UI build and reloads when ready; shows an actionable message instead of a blank window on timeout.
 - **Blueprint API** — `UHermesExportLibrary` exposes the asset exporter to Editor Utility Blueprints (*Export Assets To Folder*, *Export Selected Assets To Folder*).
+- **Pre-compiled binaries included** — ready-to-use `UnrealEditor-HermesIntegration.dll` for UE 5.8 (no build step required).
 - Added a PDF manual and a 5.4–5.8 packaging script.
+- **Download**: See the [Releases](https://github.com/justin6577-spec/HermesIntegration/releases) page for the latest version.
 
-## What's New in v3
+## What's New in v4
 
 - **Asset Exporter** — Select assets in the Content Browser, then run `Hermes.ExportSelected` (or use the menu: *Tools → Hermes → Export Selected Assets…*) to copy them as `.uasset` files along with their hard package dependencies to any folder. Re-import the bundle into another Unreal project, or use it as a hand-off package.
 - This unblocks the "exporting Unreal Engine files" capability on the Fab listing.
@@ -24,6 +26,7 @@ Embed Nous Research's Hermes Agent web UI directly in the UE5 editor. Access you
 - **Blueprint API** — Drive the asset exporter from Editor Utility Blueprints (`UHermesExportLibrary`)
 - **Zoom Controls** — Ctrl+= and Ctrl+− to adjust zoom level (remembered across restarts)
 - **Cross-Platform** — Windows, Linux, and macOS support via Chromium Embedded Framework
+- **Pre-compiled** — Ships compiled `UnrealEditor-HermesIntegration.dll` for UE 5.8 Win64 (source included for other platforms)
 
 ## Installation
 
@@ -41,8 +44,8 @@ Embed Nous Research's Hermes Agent web UI directly in the UE5 editor. Access you
 
 ### Enable the Plugin
 
-1. The plugin is already in your project's `Plugins/HermesIntegration/` directory
-2. Enable it under **Edit → Plugins → Editor** (it's listed in the project's plugins array)
+1. Copy the `HermesIntegration/` folder into your project's `Plugins/` directory
+2. Enable it under **Edit → Plugins → Editor** (or add to your project's plugin list)
 3. Restart the UE5 editor to load the plugin
 
 ## Usage
@@ -95,21 +98,37 @@ HermesIntegration/
 │   │   ├── HermesIntegrationModule.h (plugin module)
 │   │   ├── HermesManager.h           (Hermes process management)
 │   │   ├── HermesPanel.h             (Slate UI widget)
-│   │   └── HermesAssetExporter.h     (Content Browser → .uasset exporter)
+│   │   ├── HermesAssetExporter.h     (Content Browser → .uasset exporter)
+│   │   └── HermesExportLibrary.h     (Blueprint-callable API)
 │   └── Private/
 │       ├── HermesIntegrationModule.cpp
 │       ├── HermesManager.cpp
 │       ├── HermesPanel.cpp
-│       └── HermesAssetExporter.cpp
+│       ├── HermesAssetExporter.cpp
+│       └── HermesExportLibrary.cpp
+├── Config/
+│   └── FilterPlugin.ini
+├── Documentation/
+│   ├── BUILDING.md                    (Multi-engine packaging script)
+│   ├── CONSOLE_COMMAND.md
+│   ├── QUICKSTART.md
+│   ├── README.md
+│   └── HermesIntegration_Manual.pdf
+├── Binaries/
+│   └── Win64/
+│       ├── UnrealEditor-HermesIntegration.dll
+│       └── UnrealEditor-HermesIntegration.pdb
+├── Resources/
+│   └── Icon128.png
 ├── HermesIntegration.uplugin
-└── Binaries/ (generated after first compile)
+└── README.md
 ```
 
 ## Platform Support
 
-- **Windows** — WebView2 or CEF
-- **Linux** — CEF
-- **macOS** — CEF
+- **Windows** — WebView2 or CEF (pre-compiled binary included)
+- **Linux** — CEF (requires compiling from source)
+- **macOS** — CEF (requires compiling from source)
 
 ## Configuration
 
